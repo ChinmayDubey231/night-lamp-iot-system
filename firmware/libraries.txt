@@ -1,0 +1,2 @@
+# Wokwi installs these automatically
+PubSubClient

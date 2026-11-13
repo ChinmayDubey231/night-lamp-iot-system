@@ -1,0 +1,11 @@
+# Real credentials never leave your machine
+firmware/secrets.h
+
+node_modules
+tools/e2e/e2e-log.txt
+build/
+*.o
+*.elf
+*.bin
+__pycache__/
+.DS_Store

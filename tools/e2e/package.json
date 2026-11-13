@@ -1,0 +1,11 @@
+{
+  "name": "night-lamp-e2e",
+  "private": true,
+  "description": "End-to-end check: real firmware logic -> real MQTT broker -> dashboard",
+  "scripts": { "start": "node run.js" },
+  "dependencies": {
+    "aedes": "0.51.3",
+    "mqtt": "5.10.1",
+    "websocket-stream": "5.5.2"
+  }
+}

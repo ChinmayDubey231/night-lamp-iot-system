@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Night Lamp IoT · Live dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%23eda100'/></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="viz-root">
+    <header class="top">
+      <div class="brand">
+        <h1>Night Lamp</h1>
+        <span class="sub">ESP32 → MQTT → this page</span>
+      </div>
+      <div class="controls">
+        <label class="field">
+          <span class="field-label">Device</span>
+          <select id="device-select" aria-label="Device"><option value="">Waiting for devices…</option></select>
+        </label>
+        <span id="broker-pill" class="pill" role="status"><span class="dot"></span><span class="pill-text">Connecting…</span></span>
+        <button id="demo-btn" class="btn" type="button">Demo data</button>
+      </div>
+    </header>
+
+    <div id="demo-banner" class="banner" hidden>
+      <strong>Demo data.</strong> Simulated in your browser, not from a device. Start the firmware in Wokwi to see a real one.
+      <button id="demo-off" class="link" type="button">Stop demo</button>
+    </div>
+
+    <main>
+      <section class="status-row" aria-label="Device status">
+        <div id="device-status" class="status-chip neutral"><span class="icon" aria-hidden="true">…</span><span class="label">No device selected</span></div>
+        <div id="freshness" class="meta"></div>
+      </section>
+
+      <section class="tiles" aria-label="Latest values">
+        <div class="tile">
+          <div class="tile-label">Light level</div>
+          <div class="tile-value"><span id="tile-level">–</span></div>
+          <div class="tile-note" id="tile-level-note">0 bright · 4095 dark</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Lamp</div>
+          <div class="tile-value"><span id="tile-lamp">–</span></div>
+          <div class="tile-note" id="tile-lamp-note">brightness</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Readings received</div>
+          <div class="tile-value"><span id="tile-count">–</span></div>
+          <div class="tile-note" id="tile-count-note">since this page opened</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">Delivery</div>
+          <div class="tile-value"><span id="tile-delivery">–</span></div>
+          <div class="tile-note" id="tile-delivery-note">gaps in sequence numbers</div>
+        </div>
+      </section>
+
+      <section class="card charts" aria-label="Charts">
+        <div class="card-head">
+          <h2>Last <span id="range-label">15 minutes</span></h2>
+          <div class="seg" role="group" aria-label="Time range">
+            <button type="button" data-range="300000">5 min</button>
+            <button type="button" data-range="900000" class="on">15 min</button>
+            <button type="button" data-range="3600000">1 h</button>
+          </div>
+          <button id="table-toggle" class="link" type="button" aria-expanded="false">Show as table</button>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Light level <span class="muted">(0 bright … 4095 dark)</span></div>
+          <svg id="chart-level" class="chart" role="img" aria-label="Light level over time" tabindex="0"></svg>
+          <div class="chart-title">Lamp brightness <span class="muted">(PWM 0 … 255)</span></div>
+          <svg id="chart-lamp" class="chart" role="img" aria-label="Lamp brightness over time" tabindex="0"></svg>
+          <div class="chart-key">
+            <span class="key-item"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4" class="late-marker"/></svg> arrived late (buffered while offline)</span>
+            <span class="key-item"><svg width="18" height="14" aria-hidden="true"><rect x="0" y="2" width="18" height="10" class="outage-band"/></svg> device offline</span>
+          </div>
+          <div id="tooltip" class="tooltip" role="status" hidden></div>
+        </div>
+        <div id="table-view" class="table-view" hidden>
+          <table>
+            <thead><tr><th>Taken at</th><th>Seq</th><th>Level</th><th>Lamp</th><th>Why</th><th>Waited</th></tr></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="two-col">
+        <section class="card" aria-label="Device health">
+          <div class="card-head"><h2>Health</h2><span id="health-age" class="meta"></span></div>
+          <dl id="health" class="health"><div class="empty">No health report yet.</div></dl>
+        </section>
+        <section class="card" aria-label="Events">
+          <div class="card-head"><h2>Events</h2></div>
+          <ol id="events" class="events"><li class="empty">Nothing yet.</li></ol>
+        </section>
+      </div>
+    </main>
+
+    <footer class="foot">
+      Data: MQTT over WebSockets from <code id="broker-url"></code>, topics <code id="topic-base"></code>/&lt;device&gt;/{reading,health,status}.
+      <a href="https://github.com/ChinmayDubey231/night-lamp-iot-system">Source on GitHub</a>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="vendor/mqtt.min.js"></script>  <!-- mqtt.js 5.10.1 (MIT), bundled: no CDN dependency -->
+  <script src="app.js"></script>
+</body>
+</html>

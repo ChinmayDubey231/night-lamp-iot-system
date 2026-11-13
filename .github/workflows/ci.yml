@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  firmware-tests:
+    name: Firmware unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Host tests (Arduino-ESP32 2.x and 3.x watchdog APIs)
+        run: ./firmware/test/run_tests.sh
+
+  secrets:
+    name: No secrets committed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./tools/check_secrets.sh
+
+  end-to-end:
+    name: End-to-end (firmware -> MQTT broker -> subscriber)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Dashboard script parses
+        run: node --check dashboard/app.js && node --check dashboard/config.js
+      - name: Run the chain with a 40 s WiFi outage
+        run: ./tools/e2e/run.sh 100

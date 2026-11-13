@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="700" fill="#ffffff"/>
+
+  <text x="600" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#0b0b0b">Night Lamp IoT system</text>
+  <text x="600" y="64" text-anchor="middle" font-size="14" fill="#52514e">device → transport → dashboard → person</text>
+
+  <!-- ===== Device ===== -->
+  <rect x="30" y="95" width="350" height="370" rx="14" fill="#f3f7fd" stroke="#2a78d6" stroke-width="2"/>
+  <text x="50" y="125" font-size="18" font-weight="bold" fill="#0b0b0b">Device: ESP32 firmware</text>
+  <text x="50" y="145" font-size="13" fill="#52514e">firmware/sketch.ino (Wokwi or a real board)</text>
+
+  <g font-size="13" fill="#0b0b0b">
+    <rect x="50" y="160" width="140" height="56" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="120" y="183" text-anchor="middle" font-weight="bold">LDR sensor</text>
+    <text x="120" y="201" text-anchor="middle" fill="#52514e">GPIO 34 · 100 ms</text>
+    <rect x="220" y="160" width="140" height="56" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="290" y="183" text-anchor="middle" font-weight="bold">Lamp LED</text>
+    <text x="290" y="201" text-anchor="middle" fill="#52514e">GPIO 18 · PWM</text>
+    <line x1="190" y1="188" x2="218" y2="188" stroke="#52514e" stroke-width="2" marker-end="url(#a)"/>
+    <text x="205" y="232" text-anchor="middle" font-size="12" fill="#52514e">works offline</text>
+
+    <rect x="50" y="245" width="310" height="44" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="205" y="264" text-anchor="middle" font-weight="bold">Report-by-exception</text>
+    <text x="205" y="281" text-anchor="middle" fill="#52514e">send on change (±100) or every 60 s</text>
+
+    <rect x="50" y="298" width="310" height="44" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="205" y="317" text-anchor="middle" font-weight="bold">Offline ring buffer (300)</text>
+    <text x="205" y="334" text-anchor="middle" fill="#52514e">oldest first · pop only after publish OK</text>
+
+    <rect x="50" y="351" width="310" height="44" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="205" y="370" text-anchor="middle" font-weight="bold">WiFi + MQTT manager</text>
+    <text x="205" y="387" text-anchor="middle" fill="#52514e">separate reconnects · backoff 1→30 s + jitter</text>
+
+    <rect x="50" y="404" width="148" height="44" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="124" y="423" text-anchor="middle" font-weight="bold">Watchdog 30 s</text>
+    <text x="124" y="440" text-anchor="middle" fill="#52514e">reset reason → health</text>
+    <rect x="212" y="404" width="148" height="44" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="286" y="423" text-anchor="middle" font-weight="bold">NVS credentials</text>
+    <text x="286" y="440" text-anchor="middle" fill="#52514e">set over Serial</text>
+  </g>
+
+  <!-- ===== Access point ===== -->
+  <rect x="432" y="215" width="112" height="80" rx="12" fill="#fff" stroke="#c3c2b7" stroke-width="2"/>
+  <text x="488" y="248" text-anchor="middle" font-size="15" font-weight="bold" fill="#0b0b0b">WiFi AP</text>
+  <text x="488" y="268" text-anchor="middle" font-size="12" fill="#52514e">Wokwi-GUEST</text>
+  <text x="488" y="284" text-anchor="middle" font-size="12" fill="#52514e">→ internet</text>
+  <line x1="382" y1="255" x2="430" y2="255" stroke="#52514e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="406" y="244" text-anchor="middle" font-size="11" fill="#52514e">2.4 GHz</text>
+
+  <!-- ===== Broker ===== -->
+  <rect x="622" y="160" width="254" height="190" rx="14" fill="#fdf5f1" stroke="#eb6834" stroke-width="2"/>
+  <text x="749" y="190" text-anchor="middle" font-size="18" font-weight="bold" fill="#0b0b0b">MQTT broker</text>
+  <text x="749" y="210" text-anchor="middle" font-size="13" fill="#52514e">broker.hivemq.com</text>
+  <g font-size="12" fill="#0b0b0b">
+    <text x="638" y="238" font-weight="bold">…/&lt;device&gt;/reading</text>
+    <text x="638" y="254" fill="#52514e">JSON: seq, age, level, lamp, why</text>
+    <text x="638" y="278" font-weight="bold">…/&lt;device&gt;/health  (retained)</text>
+    <text x="638" y="294" fill="#52514e">uptime, RSSI, heap, reset, buffer</text>
+    <text x="638" y="318" font-weight="bold">…/&lt;device&gt;/status  (retained, LWT)</text>
+    <text x="638" y="334" fill="#52514e">online / offline</text>
+  </g>
+  <line x1="546" y1="255" x2="620" y2="255" stroke="#52514e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="583" y="244" text-anchor="middle" font-size="11" fill="#52514e">TCP 1883</text>
+
+  <!-- ===== Dashboard ===== -->
+  <rect x="940" y="95" width="230" height="370" rx="14" fill="#f2faf6" stroke="#1baf7a" stroke-width="2"/>
+  <text x="958" y="125" font-size="18" font-weight="bold" fill="#0b0b0b">Dashboard</text>
+  <text x="958" y="145" font-size="12" fill="#52514e">dashboard/ · static, GitHub Pages</text>
+  <g font-size="13" fill="#0b0b0b">
+    <rect x="956" y="160" width="198" height="40" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="1055" y="185" text-anchor="middle">online / offline / stale</text>
+    <rect x="956" y="208" width="198" height="40" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="1055" y="233" text-anchor="middle">latest light + lamp</text>
+    <rect x="956" y="256" width="198" height="56" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="1055" y="279" text-anchor="middle">2 charts, late points</text>
+    <text x="1055" y="297" text-anchor="middle" fill="#52514e">placed at receive time − age</text>
+    <rect x="956" y="320" width="198" height="40" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="1055" y="345" text-anchor="middle">delivery % from seq gaps</text>
+    <rect x="956" y="368" width="198" height="40" rx="8" fill="#fff" stroke="#c3c2b7"/>
+    <text x="1055" y="393" text-anchor="middle">health + event log</text>
+  </g>
+  <line x1="878" y1="255" x2="938" y2="255" stroke="#52514e" stroke-width="2" marker-end="url(#a)"/>
+  <text x="908" y="244" text-anchor="middle" font-size="11" fill="#52514e">WSS 8884</text>
+
+  <!-- person -->
+  <circle cx="1035" cy="430" r="0" fill="none"/>
+  <g transform="translate(1035,445)">
+    <circle cx="0" cy="-5" r="0"/>
+  </g>
+  <text x="1055" y="440" text-anchor="middle" font-size="13" fill="#52514e">read by a person in any browser</text>
+
+  <!-- ===== Bottom: cross-cutting concerns ===== -->
+  <g font-size="13" fill="#0b0b0b">
+    <rect x="30" y="495" width="365" height="180" rx="12" fill="#fafaf8" stroke="#e1e0d9"/>
+    <text x="50" y="522" font-size="15" font-weight="bold">Reliability</text>
+    <text x="50" y="548">• readings buffered offline, delivered in order</text>
+    <text x="50" y="570">• seq numbers make any loss visible end-to-end</text>
+    <text x="50" y="592">• last will marks the device offline</text>
+    <text x="50" y="614">• watchdog reboots a hung loop; reason reported</text>
+    <text x="50" y="636">• dashboard reconnects; mqtt.js bundled, no CDN</text>
+    <text x="50" y="658">• stale-data warning if heartbeats stop</text>
+
+    <rect x="417" y="495" width="365" height="180" rx="12" fill="#fafaf8" stroke="#e1e0d9"/>
+    <text x="437" y="522" font-size="15" font-weight="bold">Power</text>
+    <text x="437" y="548">• CPU at 80 MHz instead of 240 MHz</text>
+    <text x="437" y="570">• WiFi modem sleep between AP beacons</text>
+    <text x="437" y="592">• report-by-exception: ~1 msg/min when steady</text>
+    <text x="437" y="614">  instead of 30 (radio is the biggest load)</text>
+    <text x="437" y="636">• brownouts surface as reset reason "brownout"</text>
+    <text x="437" y="658">• mains/USB powered: the lamp LED needs it anyway</text>
+
+    <rect x="804" y="495" width="366" height="180" rx="12" fill="#fafaf8" stroke="#e1e0d9"/>
+    <text x="824" y="522" font-size="15" font-weight="bold">Secrets</text>
+    <text x="824" y="548">• no credentials in sketch.ino or the repo</text>
+    <text x="824" y="570">• secrets.h is gitignored (dev fallback only)</text>
+    <text x="824" y="592">• production: provision over Serial → NVS,</text>
+    <text x="824" y="614">  so the firmware binary ships with none</text>
+    <text x="824" y="636">• dashboard: read-only broker account only</text>
+    <text x="824" y="658">• CI fails if secrets.h is ever committed</text>
+  </g>
+</svg>
